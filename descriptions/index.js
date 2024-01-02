@@ -33,7 +33,7 @@ app.get('/courses/:id/descriptions', (req, res) => {
  * Push the new description with id & description to the descriptions array
  * Update the descriptionsByCourseId object with the new descriptions array
  */
-app.post('/courses/:id/descriptions', (req, res) => {
+app.post('/courses/:id/descriptions', async (req, res) => {
   const descriptionId = randomBytes(4).toString('hex');
   const { description } = req.body;
 
@@ -43,7 +43,24 @@ app.post('/courses/:id/descriptions', (req, res) => {
 
   descriptionsByCourseId[req.params.id] = descriptions;
 
+  await axios.post('http://localhost:4005/events', {
+    type: 'DescriptionCreated',
+    data: {
+      id: descriptionId,
+      description,
+      courseId: req.params.id
+    }
+  });
+
   res.status(201).send(descriptions);
+});
+
+/**
+ * 9. Route handler to post received an event and respond to with a status of ok
+ * Respond by 2 parameters: received event & type via req body
+ */
+app.post('/events', (req, res) => {
+  console.log('Received event.', req.body.type);
 });
 
 // 8. Start the server & listen on port 4001

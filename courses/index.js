@@ -30,7 +30,7 @@ app.get('/courses', (req, res) => {
  * Extracts the name -> creates a new course object with the generated id & name
  * Send the status with the courses[id]
  */
-app.post('/courses', (req, res) => {
+app.post('/courses', async (req, res) => {
   const id = randomBytes(4).toString('hex');
   const { name } = req.body;
 
@@ -38,7 +38,22 @@ app.post('/courses', (req, res) => {
     id, name
   };
 
+  await axios.post('http://localhost:4005/events', {
+    type: 'CourseCreated',
+    data: {
+      id, name
+    }
+  });
+
   res.status(201).send(courses[id]);
+});
+
+/**
+ * 9. Route handler to post received an event and respond to with a status of ok
+ * Respond by 2 paramaters: received event & type via req body
+ */
+app.post('/events', (req, res) => {
+  console.log('Received event.', req.body.type);
 });
 
 // 8. Start the server & listen on port 4000
