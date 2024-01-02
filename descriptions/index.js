@@ -1,24 +1,24 @@
-// Import required modules
+// 1. Import required modules
 const express = require('express');
 const bodyParser = require('body-parser');
 const { randomBytes } = require('crypto');
 const cors = require('cors');
 const axios = require('axios');
 
-// Create an express application
+// 2. Create an express application
 const app = express();
 
-// Use bodyParser middleware to parse JSON in the request body
+// 3. Use bodyParser middleware to parse JSON in the request body
 app.use(bodyParser.json());
 
-// Bypass CORS error
+// 4. Bypass CORS error
 app.use(cors());
 
-// Storing data locally > create a data structure (object) to store all descriptions (initially empty)
+// 5. Storing data locally > create a data structure (object) to store all descriptions (initially empty)
 const descriptionsByCourseId = {};
 
 /**
- * Route handler to get all descriptions
+ * 6. Route handler to get all descriptions
  * Either send the entire array with the objects of id & comments or (||) an empty array
  */
 app.get('/courses/:id/descriptions', (req, res) => {
@@ -26,7 +26,7 @@ app.get('/courses/:id/descriptions', (req, res) => {
 });
 
 /**
- * Route handler to create a description
+ * 7. Route handler to create a description
  * Calls randomBytes to generate a random id for the new description
  * Extract the description property in the request body
  * Either retrieve all existing descriptions or (||) initilize the descriptions array to be empty
@@ -46,7 +46,7 @@ app.post('/courses/:id/descriptions', (req, res) => {
   res.status(201).send(descriptions);
 });
 
-// Start the server & listen on port 4001
+// 8. Start the server & listen on port 4001
 app.listen(4001, () => {
   console.log('Listening on port 4001');
 });
